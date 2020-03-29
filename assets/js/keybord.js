@@ -6,7 +6,7 @@ let textarea =  document.createElement('textarea'),
     keybordRowRu1 = [1105, 49, 50, 51, 52, 53, 54, 55, 56, 57, 48, 45, 61],
     keybordRowRuHigher1 = [1025, 33, 34, 8470, 59, 37, 58, 63, 42, 40, 41, 95, 43],
     keybordRowEn1 = [96, 49, 50, 51, 52, 53, 54, 55, 56, 57, 48, 45, 61],
-    keybordRowEnHigher1 = [96, 33, 64, 35, 36, 37, 94, 38, 42, 40, 41, 95, 43],
+    keybordRowEnHigher1 = [192, 33, 64, 35, 36, 37, 94, 38, 42, 40, 41, 95, 43],
     keybordRowRu2 = [,1081, 1094, 1091, 1082, 1077, 1085, 1075, 1096, 1097, 1079, 1093, 1098, 92],
     keybordRowRuHigher2 = [,1049, 1062, 1059, 1050, 1045, 1053, 1043, 1064, 1065, 1047, 1061, 1066, 47],
     keybordRowEn2 = [,113, 119, 101, 114, 116, 121, 117, 105, 111, 112, 91, 93, 92],
@@ -27,7 +27,7 @@ document.onkeypress = function(event) {
     console.log(keybordRowEnHigher4);
 };
 
-// textarea.setAttribute('readonly', 'readonly');
+textarea.setAttribute('readonly', 'readonly');
 document.body.appendChild(textarea);
 textarea.classList.add('textarea');
 document.body.appendChild(keybord);
@@ -98,6 +98,8 @@ row[4].innerHTML += '<div class="key">Ctrl</div>' + '<div class="key">Win</div>'
 // Keybord
 
 let keys = document.querySelectorAll('.key'),
+    rusBtns = document.querySelectorAll('.rus'),
+    engBtns = document.querySelectorAll('.eng'),
     caseUPRus = document.querySelectorAll('span.rus > .caseUp'),
     caseDownRus = document.querySelectorAll('span.rus > .caseDown'),
     caseUPEng = document.querySelectorAll('span.eng > .caseUp'),
@@ -106,21 +108,28 @@ let keys = document.querySelectorAll('.key'),
     backspace = document.getElementsByClassName('Backspace'),
     space = document.getElementsByClassName('Space'),
     tab = document.getElementsByClassName('Tab'),
+    enter = document.getElementsByClassName('Enter'),
+    shiftLeft = document.getElementsByClassName('ShiftLeft'),
+    shiftRight = document.getElementsByClassName('ShiftRight'),
     isHighRegister = false,
-    isRusLang = false;
+    isRusLang = false,
+    flag = true,
+    checkCtrl = false;
 
 keys.forEach((el,i) => {
     el.classList.add(codes[i]);
 });
 
 
+
 document.addEventListener('keydown', function(event) {
     event.preventDefault();
-    console.log(event);
+    // console.log(event);
     document.querySelector('.' + event.code + '').classList.add('active');
     if (event.key.length === 1 && event.key !== ' ') {
         textarea.textContent += document.querySelector('.' + event.code + '> span > span.show').textContent;
     }
+
     switch (event.key) {
         case 'CapsLock':
             isCapselock();
@@ -134,12 +143,45 @@ document.addEventListener('keydown', function(event) {
         case 'Tab': 
             isTab();
         break;
+        case 'Shift':
+            // flag = true;
+            if (flag) {
+                flag = false;
+                isShift();
+            }
+        break;
+        case 'Enter': 
+            isEnter();
+        break;
+        case 'Control': 
+            checkCtrl = true;
+        break;
     }
     
 
-    setTimeout(function(){ 
-        document.querySelector('.' + event.code + '').classList.remove('active');
-    }, 200);
+
+
+
+    document.onkeyup = (event) => {
+
+        if (event.key === 'Shift') {
+            flag = true;
+            isShift();
+            keys.forEach(element => {
+                element.classList.remove('active');
+            });
+        } else if(event.key === 'Alt' && checkCtrl) {
+            changeLanguage();
+            checkCtrl = false;
+        }
+
+
+        keys.forEach(element => {
+            if (!element.classList.contains('ShiftLeft')) {
+                element.classList.remove('active');
+            }
+        })
+    }
 });
 
 
@@ -157,7 +199,8 @@ keys.forEach((e) => {
 
 
 
-
+// Enter
+enter[0].addEventListener('click', isEnter);
 
 
 // CAPSLOCK btn
@@ -178,6 +221,13 @@ space[0].addEventListener('click', isSpace);
 tab[0].addEventListener('click', isTab);
 
 
+
+
+
+
+function isEnter() {
+    textarea.textContent += '\n';
+}
 
 
 function isTab() {
@@ -228,4 +278,112 @@ function isCapselock() {
     } 
 }
 
+
+function isShift() {
+    if (isRusLang === true) {
+        if (isHighRegister === false) {
+            caseDownRus.forEach(e => e.classList.add('hidden'));
+            caseDownRus.forEach(e => e.classList.remove('show'));
+            caseUPRus.forEach(e => e.classList.remove('hidden'));
+            caseUPRus.forEach(e => e.classList.add('show'));
+            isHighRegister = true;
+        } else {
+            caseDownRus.forEach(e => e.classList.remove('hidden'));
+            caseDownRus.forEach(e => e.classList.add('show'));
+            caseUPRus.forEach(e => e.classList.add('hidden'));
+            caseUPRus.forEach(e => e.classList.remove('show'));
+            isHighRegister = false;
+        }
+    } else {
+        if (isHighRegister === false) {
+            caseDownEng.forEach(e => e.classList.add('hidden'));
+            caseDownEng.forEach(e => e.classList.remove('show'));
+            caseUPEng.forEach(e => e.classList.remove('hidden'));
+            caseUPEng.forEach(e => e.classList.add('show'));
+            isHighRegister = true;
+        } else {
+            caseDownEng.forEach(e => e.classList.remove('hidden'));
+            caseDownEng.forEach(e => e.classList.add('show'));
+            caseUPEng.forEach(e => e.classList.add('hidden'));
+            caseUPEng.forEach(e => e.classList.remove('show'));
+            isHighRegister = false;
+        }
+    } 
+}
+
+
+function changeLanguage() {
+    if (isRusLang === true) {
+        rusBtns.forEach(e => {
+            e.classList.add('hidden');
+        });
+        caseUPRus.forEach(e => {
+            e.classList.add('hidden');
+            e.classList.remove('show');
+        })
+        caseDownRus.forEach(e => {
+            e.classList.add('hidden');
+            e.classList.remove('show');
+        })
+        engBtns.forEach(e => {
+            e.classList.remove('hidden');
+        });
+        caseUPEng.forEach(e => {
+            e.classList.remove('hidden');
+        });
+        caseDownEng.forEach(e => {
+            e.classList.remove('hidden');
+        });
+        isRusLang = false;
+        if (isHighRegister) {
+            caseDownEng.forEach(e => e.classList.remove('show'));
+            caseDownEng.forEach(e => e.classList.add('hidden'));
+            caseUPEng.forEach(e => e.classList.add('show'));
+            caseUPEng.forEach(e => e.classList.remove('hidden'));
+            isHighRegister = true;
+        } else {
+            caseDownEng.forEach(e => e.classList.remove('hidden'));
+            caseDownEng.forEach(e => e.classList.add('show'));
+            caseUPEng.forEach(e => e.classList.add('hidden'));
+            caseUPEng.forEach(e => e.classList.remove('show'));
+            isHighRegister = false;
+        }
+    } else {
+        rusBtns.forEach(e => {
+            e.classList.remove('hidden');
+        });
+        caseUPRus.forEach(e => {
+            e.classList.remove('hidden');
+        })
+        caseDownRus.forEach(e => {
+            e.classList.remove('hidden');
+        })
+        engBtns.forEach(e => {
+            e.classList.add('hidden');
+
+        });
+        caseUPEng.forEach(e => {
+            e.classList.add('hidden');
+            e.classList.remove('show');
+        });
+        caseDownEng.forEach(e => {
+            e.classList.add('hidden');
+            e.classList.remove('show');
+        });
+        isRusLang = true;
+        if (isHighRegister) {
+            caseDownRus.forEach(e => e.classList.add('hidden'));
+            caseDownRus.forEach(e => e.classList.remove('show'));
+            caseUPRus.forEach(e => e.classList.remove('hidden'));
+            caseUPRus.forEach(e => e.classList.add('show'));
+            isHighRegister = true;
+        } else {
+            caseDownRus.forEach(e => e.classList.remove('hidden'));
+            caseDownRus.forEach(e => e.classList.add('show'));
+            caseUPRus.forEach(e => e.classList.add('hidden'));
+            caseUPRus.forEach(e => e.classList.remove('show'));
+            isHighRegister = false;
+        }
+    }
+}
 

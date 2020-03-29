@@ -52,8 +52,8 @@ span {
     background: #79aa89;
 }
 .key:active {
-    border-radius: 50%;
-    background-color: greenyellow;
+    border-radius: 10px;
+    background-color: rgb(81, 128, 134);
 }
 
 .Backspace,
@@ -115,8 +115,8 @@ span {
 }
 
 .active {
-    border-radius: 50%;
-    background-color: greenyellow;
+    border-radius: 10px;
+    background-color: rgb(81, 128, 134);
 }
 
 
