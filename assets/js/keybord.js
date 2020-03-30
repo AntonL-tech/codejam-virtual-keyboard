@@ -27,7 +27,7 @@ document.onkeypress = function(event) {
     console.log(keybordRowEnHigher4);
 };
 
-textarea.setAttribute('readonly', 'readonly');
+// textarea.setAttribute('readonly', 'readonly');
 document.body.appendChild(textarea);
 textarea.classList.add('textarea');
 document.body.appendChild(keybord);
@@ -123,20 +123,22 @@ keys.forEach((el,i) => {
 
 
 document.addEventListener('keydown', function(event) {
-    event.preventDefault();
-    // console.log(event);
+    if (event.key !== 'Backspace' && event.key !== 'Delete' && event.key !== 'ArrowUp' && event.key !== 'ArrowLeft' && event.key !== 'ArrowRight' && event.key !== 'ArrowDown') {
+        event.preventDefault();
+    }
+    console.log(event);
     document.querySelector('.' + event.code + '').classList.add('active');
     if (event.key.length === 1 && event.key !== ' ') {
-        textarea.textContent += document.querySelector('.' + event.code + '> span > span.show').textContent;
+        textarea.value += document.querySelector('.' + event.code + '> span > span.show').textContent;
     }
 
     switch (event.key) {
         case 'CapsLock':
             isCapselock();
         break;
-        case 'Backspace':
-            isBackspace();
-        break;
+        // case 'Backspace':
+        //     isBackspace();
+        // break;
         case ' ': 
             isSpace();
         break;
@@ -144,7 +146,6 @@ document.addEventListener('keydown', function(event) {
             isTab();
         break;
         case 'Shift':
-            // flag = true;
             if (flag) {
                 flag = false;
                 isShift();
@@ -180,8 +181,8 @@ document.addEventListener('keydown', function(event) {
             if (!element.classList.contains('ShiftLeft')) {
                 element.classList.remove('active');
             }
-        })
-    }
+        });
+    };
 });
 
 
@@ -189,7 +190,7 @@ keys.forEach((e) => {
     e.addEventListener('click', function(event) {
         if (event.target.tagName === 'SPAN') {
             console.log('event :' + event.target);
-            textarea.textContent += event.target.textContent;
+            textarea.value += event.target.textContent;
         }
     });
 });
@@ -221,25 +222,26 @@ space[0].addEventListener('click', isSpace);
 tab[0].addEventListener('click', isTab);
 
 
-
-
-
+shiftLeft[0].addEventListener('mousedown', isShift);
+shiftLeft[0].addEventListener('mouseup', isShift);
+shiftRight[0].addEventListener('mousedown', isShift);
+shiftRight[0].addEventListener('mouseup', isShift);
 
 function isEnter() {
-    textarea.textContent += '\n';
+    textarea.value += '\n';
 }
 
 
 function isTab() {
-    textarea.textContent += '    ';
+    textarea.value += '    ';
 }
 
 function isSpace() {
-    textarea.textContent += ' ';
+    textarea.value += ' ';
 }
 
 function isBackspace() {
-    textarea.textContent = textarea.textContent.substring(textarea.textContent[0], textarea.textContent.length - 1);
+    textarea.value = textarea.value.substring(textarea.value[0], textarea.value.length - 1);
 }
 
 
