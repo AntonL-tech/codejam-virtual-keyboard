@@ -27,7 +27,7 @@ document.onkeypress = function(event) {
     console.log(keybordRowEnHigher4);
 };
 
-textarea.setAttribute('readonly', 'readonly');
+// textarea.setAttribute('readonly', 'readonly');
 document.body.appendChild(textarea);
 textarea.classList.add('textarea');
 document.body.appendChild(keybord);
@@ -111,6 +111,9 @@ let keys = document.querySelectorAll('.key'),
     enter = document.getElementsByClassName('Enter'),
     shiftLeft = document.getElementsByClassName('ShiftLeft'),
     shiftRight = document.getElementsByClassName('ShiftRight'),
+    deleteBtn = document.getElementsByClassName('Delete'),
+    arrowLeft = document.getElementsByClassName('ArrowLeft'),
+    arrowRight = document.getElementsByClassName('ArrowRight'),
     isHighRegister = false,
     isRusLang = false,
     flag = true,
@@ -122,20 +125,21 @@ keys.forEach((el,i) => {
 
 
 
+
 document.addEventListener('keydown', function(event) {
-    event.preventDefault();
-    // console.log(event);
+    if (event.key !== 'Backspace' && event.key !== 'Delete' && event.key !== 'ArrowUp' && event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') {
+        event.preventDefault();
+    }
+    console.log(event);
     document.querySelector('.' + event.code + '').classList.add('active');
     if (event.key.length === 1 && event.key !== ' ') {
-        textarea.textContent += document.querySelector('.' + event.code + '> span > span.show').textContent;
+        let letter = document.querySelector('.' + event.code + '> span > span.show').textContent;
+        writeLetter(letter);
     }
 
     switch (event.key) {
         case 'CapsLock':
             isCapselock();
-        break;
-        case 'Backspace':
-            isBackspace();
         break;
         case ' ': 
             isSpace();
@@ -144,7 +148,6 @@ document.addEventListener('keydown', function(event) {
             isTab();
         break;
         case 'Shift':
-            // flag = true;
             if (flag) {
                 flag = false;
                 isShift();
@@ -158,9 +161,6 @@ document.addEventListener('keydown', function(event) {
         break;
     }
     
-
-
-
 
     document.onkeyup = (event) => {
 
@@ -180,24 +180,43 @@ document.addEventListener('keydown', function(event) {
             if (!element.classList.contains('ShiftLeft')) {
                 element.classList.remove('active');
             }
-        })
-    }
+        });
+    };
 });
 
 
 keys.forEach((e) => {
     e.addEventListener('click', function(event) {
         if (event.target.tagName === 'SPAN') {
-            console.log('event :' + event.target);
-            textarea.textContent += event.target.textContent;
+            let letter = event.target.textContent;
+            writeLetter(letter);
         }
     });
 });
 
 
-// Change Lang
+
+// Arrow Left 
 
 
+arrowLeft[0].onclick = () => {
+    let startPos = textarea.selectionStart;
+    textarea.focus();
+    textarea.setSelectionRange(startPos - 1, startPos -1);
+}
+
+// Arrow Right
+
+arrowRight[0].onclick = () => {
+    let startPos = textarea.selectionStart;
+    textarea.focus();
+    textarea.setSelectionRange(startPos + 1, startPos + 1);
+}
+
+
+// Delete
+
+deleteBtn[0].addEventListener('click', deleteAtCursor);
 
 // Enter
 enter[0].addEventListener('click', isEnter);
@@ -210,7 +229,7 @@ capsLock[0].addEventListener('click', isCapselock);
 
 // Backspace
 
-backspace[0].addEventListener('click', isBackspace);
+backspace[0].addEventListener('click', backspaceAtCursor);
 
 
 // Space 
@@ -221,25 +240,22 @@ space[0].addEventListener('click', isSpace);
 tab[0].addEventListener('click', isTab);
 
 
-
-
-
+shiftLeft[0].addEventListener('mousedown', isShift);
+shiftLeft[0].addEventListener('mouseup', isShift);
+shiftRight[0].addEventListener('mousedown', isShift);
+shiftRight[0].addEventListener('mouseup', isShift);
 
 function isEnter() {
-    textarea.textContent += '\n';
+    writeLetter('\n');
 }
 
 
 function isTab() {
-    textarea.textContent += '    ';
+    writeLetter('   ',3);
 }
 
 function isSpace() {
-    textarea.textContent += ' ';
-}
-
-function isBackspace() {
-    textarea.textContent = textarea.textContent.substring(textarea.textContent[0], textarea.textContent.length - 1);
+    writeLetter(' ');
 }
 
 
@@ -387,3 +403,50 @@ function changeLanguage() {
     }
 }
 
+
+
+
+function backspaceAtCursor() {
+    let startPos = textarea.selectionStart,
+    endPos = textarea.selectionEnd;
+  if(textarea.selectionStart) {
+    if(textarea.selectionStart == textarea.selectionEnd) {
+      textarea.value = textarea.value.substring(0, startPos - 1) + textarea.value.substring(endPos, textarea.value.length);
+
+      textarea.focus(); 
+      textarea.setSelectionRange(startPos - 1, startPos - 1); 
+    } else {
+      textarea.value = textarea.value.substring(0, startPos) + textarea.value.substring(endPos, textarea.value.length);
+
+      textarea.focus(); 
+      textarea.setSelectionRange(startPos, startPos); 
+    }
+  }
+}
+
+function deleteAtCursor() {
+    let startPos = textarea.selectionStart,
+    endPos = textarea.selectionEnd;
+
+    if(textarea.selectionStart == textarea.selectionEnd)
+    {
+        textarea.value = textarea.value.substring(0, startPos) + textarea.value.substring(endPos + 1, textarea.value.length);
+        textarea.focus(); 
+        textarea.setSelectionRange(startPos, startPos);
+    } else {
+      textarea.value = textarea.value.substring(0, startPos) + textarea.value.substring(endPos, textarea.value.length);
+      textarea.focus(); 
+      textarea.setSelectionRange(startPos, startPos); 
+    }
+  }
+
+
+  function writeLetter(letter, pos = 1) {
+    let startPos = textarea.selectionStart,
+    endPos = textarea.selectionEnd,
+    startValue = textarea.value.substring(0, startPos),
+    endValue = textarea.value.substring(endPos, textarea.value.length);
+    textarea.value = startValue + letter + endValue;
+    textarea.focus(); 
+    textarea.setSelectionRange(startPos + pos, startPos + pos); 
+  }
