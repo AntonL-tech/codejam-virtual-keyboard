@@ -114,10 +114,13 @@ let keys = document.querySelectorAll('.key'),
     deleteBtn = document.getElementsByClassName('Delete'),
     arrowLeft = document.getElementsByClassName('ArrowLeft'),
     arrowRight = document.getElementsByClassName('ArrowRight'),
+    arrowUp = document.getElementsByClassName('ArrowUp'),
     isHighRegister = false,
     isRusLang = false,
     flag = true,
     checkCtrl = false;
+
+
 
 keys.forEach((el,i) => {
     el.classList.add(codes[i]);
@@ -127,7 +130,7 @@ keys.forEach((el,i) => {
 
 
 document.addEventListener('keydown', function(event) {
-    if (event.key !== 'Backspace' && event.key !== 'Delete' && event.key !== 'ArrowUp' && event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') {
+    if (event.key !== 'Backspace' && event.key !== 'Delete' && event.key !== 'ArrowUp' && event.key !== 'ArrowLeft' && event.key !== 'ArrowRight' && event.key !== 'ArrowDown') {
         event.preventDefault();
     }
     console.log(event);
@@ -213,6 +216,35 @@ arrowRight[0].onclick = () => {
     textarea.setSelectionRange(startPos + 1, startPos + 1);
 }
 
+// Arrow Up 
+
+arrowUp[0].onclick = () => {
+    // const event = document.createEvent('KeyboardEvent');
+    // event.initEvent('keydown', true, false, true, 
+    //     false, false, false, false, 
+    //         38, 0);
+    // textarea.focus();
+    // document.dispatchEvent(event);
+    // const event = new KeyboardEvent('keydown', {
+    //     isTrusted: true,
+    //     key: "ArrowUp",
+    //     code: "ArrowUp",
+    //     location: 0,
+    //     ctrlKey: false,
+    //     shiftKey: false,
+    //     altKey: false,
+    //     metaKey: false,
+    //     repeat: false,
+    //     isComposing: false,
+    //     charCode: 0,
+    //     keyCode: 38,
+    //     which: 38,
+    //     type: "keydown"
+    // });
+    // event.initEvent('keydown');
+    // textarea.focus();
+    // document.dispatchEvent(event);
+}
 
 // Delete
 
