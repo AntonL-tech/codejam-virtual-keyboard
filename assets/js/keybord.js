@@ -115,6 +115,7 @@ let keys = document.querySelectorAll('.key'),
     arrowLeft = document.getElementsByClassName('ArrowLeft'),
     arrowRight = document.getElementsByClassName('ArrowRight'),
     arrowUp = document.getElementsByClassName('ArrowUp'),
+    arrowDown = document.getElementsByClassName('ArrowDown'),
     isHighRegister = false,
     isRusLang = false,
     flag = true,
@@ -218,7 +219,7 @@ arrowRight[0].onclick = () => {
 
 // Arrow Up 
 
-arrowUp[0].onclick = () => {
+arrowUp[0].onclick = (event) => {
     // const event = document.createEvent('KeyboardEvent');
     // event.initEvent('keydown', true, false, true, 
     //     false, false, false, false, 
@@ -244,6 +245,15 @@ arrowUp[0].onclick = () => {
     // event.initEvent('keydown');
     // textarea.focus();
     // document.dispatchEvent(event);
+    let letter = event.target.textContent;
+    writeLetter(letter);
+}
+
+// ArrowDown
+
+arrowDown[0].onclick = (event) => {
+    let letter = event.target.textContent;
+    writeLetter(letter);
 }
 
 // Delete
